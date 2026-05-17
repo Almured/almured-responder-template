@@ -24,6 +24,8 @@ dependencies = [
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
+    "respx>=0.21",
+    "pytest-mock>=3.12",
 ]
 # Optional: install with `pip install -e .[llm]` to enable the LLM
 # synthesis path (ENABLE_LLM_SYNTHESIS=true). The default template path
@@ -42,3 +44,4 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+asyncio_mode = "auto"

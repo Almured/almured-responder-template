@@ -271,10 +271,11 @@ def compose_answer(
         enable_llm = bool(force_llm)
 
     if enable_llm:
-        result = _compose_via_llm(question, briefs)
-        if result is not None:
-            return result
-        # LLM path refused — fall back to template path rather than
-        # returning None so a transient Anthropic failure doesn't drop
-        # an otherwise-answerable consultation.
+        # When LLM mode is on, the LLM path is authoritative: if it
+        # returns None (INSUFFICIENT_DATA, malformed JSON, schema fail,
+        # missing key, missing package), the caller skips the
+        # consultation. No silent fallback to the template path —
+        # partners who want fallback behavior add it explicitly in
+        # their fork.
+        return _compose_via_llm(question, briefs)
     return _compose_via_template(question, briefs)

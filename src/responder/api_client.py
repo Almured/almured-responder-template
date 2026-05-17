@@ -35,14 +35,21 @@ class AuthenticationError(Exception):
 class TokenBucket:
     """Single-task in-memory token bucket. Not safe across asyncio tasks
     without external locking — fine for the single-poller pattern this
-    template uses."""
+    template uses.
 
-    def __init__(self, rate_per_minute: float):
+    `capacity` defaults to `rate_per_minute` (a full minute of burst) but
+    can be set explicitly — tests use a smaller capacity with a faster
+    rate to exercise pacing in milliseconds instead of minutes.
+    """
+
+    def __init__(self, rate_per_minute: float, capacity: Optional[float] = None):
         if rate_per_minute <= 0:
             raise ValueError("rate_per_minute must be > 0")
         self._rate_per_second = rate_per_minute / 60.0
-        self._capacity = float(rate_per_minute)
-        self._tokens = float(rate_per_minute)
+        self._capacity = float(capacity) if capacity is not None else float(rate_per_minute)
+        if self._capacity <= 0:
+            raise ValueError("capacity must be > 0")
+        self._tokens = self._capacity
         self._last = time.monotonic()
 
     async def acquire(self) -> None:
