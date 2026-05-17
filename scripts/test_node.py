@@ -126,8 +126,9 @@ def _print_pass(output: str, token: str) -> None:
     print(f"Activation token: {token}")
     print()
     print(
-        "Submit this token to general@almured.com (placeholder address) when "
-        "applying for certification."
+        "Submit this token to general@almured.com with subject "
+        "'[PARTNER] certification request' when applying for "
+        "Almured Implementation Partner certification."
     )
 
 
